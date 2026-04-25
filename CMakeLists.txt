@@ -1,6 +1,7 @@
 # CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
 # 并包含子项目。
 #
+# 设置cmake的最低版本 Qt5 需要 CMake 3.16+，Qt6 需要 3.18+
 cmake_minimum_required (VERSION 3.16)
 
 # 如果支持，请为 MSVC 编译器启用热重载。
@@ -9,23 +10,25 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+# 定义项目名称、项目版本、语言 
 project (CMakeQt5  VERSION 0.1 LANGUAGES CXX)
 
-# 设置C++标准         
-set(CMAKE_CXX_STANDARD 17)
-# 强制要求必须支持该标准，如果编译器不支持则报错
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# 设置工程包含当前目录，非必须
-set(CMAKE_INCLUDE_CURRENT_DIR ON) 
-# 可选：关闭编译器特定扩展，确保代码可移植
-set(CMAKE_CXX_EXTENSIONS OFF)
-                                                                                      
 # 打开全局uic，非必须
 set(CMAKE_AUTOUIC ON)
 # 打开全局moc,设置自动生成moc文件，一定要设置
 set(CMAKE_AUTOMOC ON)
 # 打开全局rcc，非必须，如需打开，注意修改相应的qrc文件名
 set(CMAKE_AUTORCC ON)  
+
+# 指定 C++ 语言标准版本       
+set(CMAKE_CXX_STANDARD 17)
+# 强制要求指定的标准必须被满足。如果不支持C++17，CMake 配置阶段会直接报错并终止，不会尝试降级编译
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# 设置工程包含当前目录，非必须
+set(CMAKE_INCLUDE_CURRENT_DIR ON) 
+# 可选：关闭编译器特定扩展，保证代码的跨平台可移植性
+set(CMAKE_CXX_EXTENSIONS OFF)
+                                                                                      
 
 # 设置CMP0074策略为NEW  
 cmake_policy(SET CMP0074 NEW)
@@ -53,7 +56,6 @@ link_directories("${CMAKE_PREFIX_PATH}/lib")
 set(APP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/apps") 
 set(APP_UI_DIR "${CMAKE_SOURCE_DIR}/ui")
 
-  
 file(GLOB APP_SOURCE_FILES "${APP_SOURCE_DIR}/*.{h,cpp}")
 file(GLOB APP_UI_FILES "${APP_UI_DIR}/*.ui")
 
@@ -68,7 +70,6 @@ include_directories(${APP_UI_DIR})
 include_directories(${CMAKE_BINARY_PATH})
 include_directories(${CMAKE_CURRENT_BINRAY_PATH})
 
-
 message(${PROJECT_NAME} " build type:" ${CMAKE_BUILD_TYPE})
 message("CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 message("CXX Compiler:" ${CMAKE_CXX_COMPILER})
@@ -78,8 +79,8 @@ message("CMAKE_CURRENT_SOURCE_DIR" ${CMAKE_CURRENT_SOURCE_DIR} )
 message("CMAKE_SIZEOF_VOID_P: " ${CMAKE_SIZEOF_VOID_P})
 message("CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR})
 
-
-find_package(Qt5 REQUIRED COMPONENTS
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
   Core
   Gui
   Widgets
@@ -116,13 +117,18 @@ add_executable(${PROJECT_NAME} WIN32
  # Add the target includes for MY_PROJECT 
 target_include_directories(${PROJECT_NAME} PRIVATE ${APP_UI_DIR})
   
+# 把库链接到目标执行程序上  
 target_link_libraries(${PROJECT_NAME} 
-    PUBLIC
-	Qt5::Core
-	Qt5::Gui
-	Qt5::Widgets
+    PRIVATE
+	Qt${QT_VERSION_MAJOR}::Core
+	Qt${QT_VERSION_MAJOR}::Gui
+	Qt${QT_VERSION_MAJOR}::Widgets
 )
 
+# 为构建目标设置特定的属性(发布专业、规范的软件时，必不可少)
+set_target_properties(${PROJECT_NAME}  PROPERTIES
+    WIN32_EXECUTABLE TRUE
+)
 
  # ==================== Deployment ====================
 # Handle Windows deployment
