@@ -65,7 +65,7 @@ set(TS_FILES
     ${CMAKE_SOURCE_DIR}/translations/en_US.ts
 )
 
-include_directories("${APP_SOURCE_DIR}")
+include_directories(${APP_SOURCE_DIR})
 include_directories(${APP_UI_DIR})
 include_directories(${CMAKE_BINARY_PATH})
 include_directories(${CMAKE_CURRENT_BINRAY_PATH})
@@ -125,7 +125,8 @@ target_link_libraries(${PROJECT_NAME}
 	Qt${QT_VERSION_MAJOR}::Widgets
 )
 
-# 为构建目标设置特定的属性(发布专业、规范的软件时，必不可少)
+# 为构建目标设置特定的属性(发布专业、规范的软件时，必不可少)  
+# TRUE = 窗口应用程序，FALSE = 控制台应用程序
 set_target_properties(${PROJECT_NAME}  PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
