@@ -52,11 +52,20 @@ endif ()
 #qt库文件
 link_directories("${CMAKE_PREFIX_PATH}/lib")
 
+# 添加Boost库的头文件路径
+
+# 添加Log4Qt库的头文件路径
+
+# 添加Qwt库的头文件路径
+
+# 添加QXls库
+# 添加libevent库的头文件路径
+
 #=============================项目文件 ====================#
 set(APP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/apps") 
 set(APP_UI_DIR "${CMAKE_SOURCE_DIR}/ui")
 
-file(GLOB APP_SOURCE_FILES "${APP_SOURCE_DIR}/*.{h,cpp}")
+file(GLOB APP_SOURCE_FILES "${APP_SOURCE_DIR}/*.h" "${APP_SOURCE_DIR}/*.cpp" )
 file(GLOB APP_UI_FILES "${APP_UI_DIR}/*.ui")
 
 #国际化
