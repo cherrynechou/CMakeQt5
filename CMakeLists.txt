@@ -32,23 +32,24 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 设置CMP0074策略为NEW  
 cmake_policy(SET CMP0074 NEW)
+
+# MSVC UTF-8 源码支持
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")  
 
 
-if (WIN32)  
-    if (MSVC)
-        message("MSVC")
-        if(CMAKE_SIZEOF_VOID_P EQUAL 4) #32位系统
-            set(CMAKE_PREFIX_PATH "E:/Qt/5.15.2/msvc2019")
-        elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)#64位系统
-            set(CMAKE_PREFIX_PATH "E:/Qt/5.15.2/msvc2019_64")
-        endif ()
+# ==================== 平台检测 ====================
+if (WIN32 AND MSVC)
+    message("MSVC")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4) #32位系统
+        set(Qt5_ROOT "E:/Qt/5.15.2/msvc2019")
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)#64位系统
+        set(Qt5_ROOT "E:/Qt/5.15.2/msvc2019_64")
     endif ()
+    message(STATUS "Qt5_ROOT: ${Qt5_ROOT}")
 endif ()
 
-
-#==============================库文件===========================================#
+# ==================== 第三方库路径（按需取消注释）====================
 #qt库文件
 link_directories("${CMAKE_PREFIX_PATH}/lib")
 
@@ -65,7 +66,7 @@ link_directories("${CMAKE_PREFIX_PATH}/lib")
 set(APP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/apps") 
 set(APP_UI_DIR "${CMAKE_SOURCE_DIR}/ui")
 
-file(GLOB APP_SOURCE_FILES "${APP_SOURCE_DIR}/*.h" "${APP_SOURCE_DIR}/*.cpp" )
+file(GLOB APP_SOURCE_FILES "${APP_SOURCE_DIR}/*.h" "${APP_SOURCE_DIR}/*.cpp" "${CMAKE_SOURCE_DIR}/*.cpp")
 file(GLOB APP_UI_FILES "${APP_UI_DIR}/*.ui")
 
 #国际化
@@ -73,11 +74,6 @@ set(TS_FILES
     ${CMAKE_SOURCE_DIR}/translations/zh_CN.ts
     ${CMAKE_SOURCE_DIR}/translations/en_US.ts
 )
-
-include_directories(${APP_SOURCE_DIR})
-include_directories(${APP_UI_DIR})
-include_directories(${CMAKE_BINARY_PATH})
-include_directories(${CMAKE_CURRENT_BINRAY_PATH})
 
 message(${PROJECT_NAME} " build type:" ${CMAKE_BUILD_TYPE})
 message("CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
@@ -89,11 +85,7 @@ message("CMAKE_SIZEOF_VOID_P: " ${CMAKE_SIZEOF_VOID_P})
 message("CMAKE_SOURCE_DIR: " ${CMAKE_SOURCE_DIR})
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
-  Core
-  Gui
-  Widgets
-)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
    
 # 添加翻译
 find_program(LUPDATE_EXECUTABLE lupdate)
@@ -116,7 +108,6 @@ endforeach()
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${APP_UI_DIR})
 
 add_executable(${PROJECT_NAME} WIN32 
-    main.cpp
     ${APP_SOURCE_FILES}
     ${APP_UI_FILES}
     ${APP_ICON_RESOURCE_WINDOWS}
@@ -124,7 +115,12 @@ add_executable(${PROJECT_NAME} WIN32
  )  
     
  # Add the target includes for MY_PROJECT 
-target_include_directories(${PROJECT_NAME} PRIVATE ${APP_UI_DIR})
+target_include_directories(${PROJECT_NAME} 
+    PRIVATE 
+        ${CMAKE_SOURCE_DIR}
+        ${APP_SOURCE_DIR}
+        ${APP_UI_DIR}
+)
   
 # 把库链接到目标执行程序上  
 target_link_libraries(${PROJECT_NAME} 
@@ -147,7 +143,7 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
         set(DEBUG_SUFFIX "d")
     endif ()
-     set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")
+    set(QT_INSTALL_PATH "${Qt5_ROOT}")
     if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
         set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
         if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
