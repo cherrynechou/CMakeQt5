@@ -49,6 +49,19 @@ if (WIN32 AND MSVC)
     message(STATUS "Qt5_ROOT: ${Qt5_ROOT}")
 endif ()
 
+
+if (WIN32 AND MINGW)
+    message(STATUS "正在使用 MinGW 编译器")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(Qt5_ROOT "E:/Qt/5.15.2/mingw81_32")
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(Qt5_ROOT "E:/Qt/5.15.2/mingw81_64")
+    else()
+        message(FATAL_ERROR "无法确定 MinGW 的位数")
+    endif()
+endif ()
+
+
 # ==================== 第三方库路径（按需取消注释）====================
 #qt库文件
 link_directories("${CMAKE_PREFIX_PATH}/lib")
