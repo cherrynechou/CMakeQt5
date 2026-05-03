@@ -28,14 +28,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 # 可选：关闭编译器特定扩展，保证代码的跨平台可移植性
 set(CMAKE_CXX_EXTENSIONS OFF)
-                                                                                      
-
+                                                                       
 # 设置CMP0074策略为NEW  
 cmake_policy(SET CMP0074 NEW)
 
 # MSVC UTF-8 源码支持
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")  
+
+# ==================== 第三方库地址 ====================
+#set(BOOST_ROOT "E:/libs/boost_1_90_0")
 
 
 # ==================== 平台检测 ====================
@@ -82,7 +84,7 @@ set(APP_UI_DIR "${CMAKE_SOURCE_DIR}/ui")
 file(GLOB APP_SOURCE_FILES "${APP_SOURCE_DIR}/*.h" "${APP_SOURCE_DIR}/*.cpp" "${CMAKE_SOURCE_DIR}/*.cpp")
 file(GLOB APP_UI_FILES "${APP_UI_DIR}/*.ui")
 
-#国际化
+#=============================国际化=========================#
 set(TS_FILES
     ${CMAKE_SOURCE_DIR}/translations/zh_CN.ts
     ${CMAKE_SOURCE_DIR}/translations/en_US.ts
@@ -115,7 +117,7 @@ endforeach()
 #set(QRC_SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/resources/main.qrc")
   
 #当前应用图标
-#set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/resources/app.rc")
+#set(APP_RESOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/resources/app.rc")
 
 # Add the forms directory to the AUTOUIC search paths
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${APP_UI_DIR})
@@ -123,7 +125,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${APP_UI_DIR})
 add_executable(${PROJECT_NAME} WIN32 
     ${APP_SOURCE_FILES}
     ${APP_UI_FILES}
-    ${APP_ICON_RESOURCE_WINDOWS}
+    ${APP_RESOURCE_FILE}
 #   ${QRC_SOURCE_FILE}
  )  
     
