@@ -6,14 +6,15 @@
 #define PROJECT_VERSION_PATCH @PROJECT_VERSION_PATCH@
 #define PROJECT_VERSION_BUILD @PROJECT_VERSION_BUILD@
 
-
 #define PROJECT_VERSION_STR "@PROJECT_VERSION@"
 
 #define APP_COMPANY_NAME			""
+#define APP_FILE_DESCRIPTION        ""
 #define APP_NAME					""
-#define APP_NAME_STR				""
+#define APP_FILE_VERSION			""
+#define APP_INTERNAL_NAME           ""
 #define APP_LEGAL_COPYRIGHT			""
-#define APP_INTERNAL_NAME			""
 #define APP_ORIGINAL_FILENAME		""
+
 
 #endif // CONFIG_H
