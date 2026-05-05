@@ -115,7 +115,7 @@ find_program(LUPDATE_EXECUTABLE lupdate)
 find_program(LRELEASE_EXECUTABLE lrelease)
 
 # -----------------------创建版本头文件模板----------------------------------------------
-
+# 配置版本头文件
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
