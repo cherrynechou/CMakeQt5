@@ -11,13 +11,13 @@
 // 用于比较的数值版本（例如：10203 代表 1.2.3）
 #define PROJECT_VERSION_INT ((PROJECT_VERSION_MAJOR * 10000) + (PROJECT_VERSION_MINOR * 100) + PROJECT_VERSION_PATCH)
 
-#define APP_COMPANY_NAME			""
-#define APP_FILE_DESCRIPTION        ""
-#define APP_NAME					""
-#define APP_FILE_VERSION			""
-#define APP_INTERNAL_NAME           ""
-#define APP_LEGAL_COPYRIGHT			""
-#define APP_ORIGINAL_FILENAME		""
+#define APP_COMPANY_NAME			"Test Company"
+#define APP_FILE_DESCRIPTION        "My Application Description"
+#define APP_NAME					"MyApplication"
+#define APP_FILE_VERSION			"dd"
+#define APP_INTERNAL_NAME           "ee"
+#define APP_LEGAL_COPYRIGHT			"Copyright (C) 2024"
+#define APP_ORIGINAL_FILENAME		"gg"
 
 
 #endif // CONFIG_H
